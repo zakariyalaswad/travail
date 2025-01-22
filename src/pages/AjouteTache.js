@@ -43,15 +43,22 @@ function AjouteTache(){
         e.preventDefault();
         setLoadingAdd(true);
         setMessage({ text: '', type: '' });
-        const { titre, description, datedebut, datefin, employee } = formdata;
+        const datedebut = new Date(formdata.datedebut);
+        const datefin = new Date(formdata.datefin);
+        const currentdate = new Date();
+        if (datedebut > datefin) {
+            setMessage({ text: 'La date de debut doit etre inferieur à la date de fin', type: 'error' });
+            setLoadingAdd(false);
+            return;
+        } else if (currentdate < datedebut) {
+            formdata.etat = "A faire";
+        } else if (currentdate >= datedebut && currentdate <= datefin) {
+            formdata.etat = "En cour";
+        } else if (currentdate > datefin) {
+            formdata.etat = "Terminée";
+        }
         try {
-            const docRef = await addDoc(collection(db, 'taches'), {
-                titre,
-                description,
-                datedebut,
-                datefin,
-                employee
-            });
+            const docRef = await addDoc(collection(db, 'taches'),formdata);
             console.log("Document written with ID: ", docRef.id);
             setMessage({ text: 'Tache ajoutée avec succès', type: 'success' });
             setformdata({

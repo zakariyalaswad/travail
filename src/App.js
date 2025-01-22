@@ -4,7 +4,7 @@ import { collection, getDocs, query, where, setDoc, doc } from "firebase/firesto
 import { db } from './firebase';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
-
+import { SpeedInsights } from "@vercel/speed-insights/react"
 function App() {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
