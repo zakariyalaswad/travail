@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import navigate from 'navigate';
 
 function DashResponsable(){
-    
     return (
         <div>
             <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -20,31 +20,16 @@ function DashResponsable(){
                                 <a class="nav-link active" aria-current="page" href="#"><i class="bi bi-house"></i>Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Link</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tache</a>
-                            <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">En Cour</a></li>
-                            <li><a class="dropdown-item" href="#">A faire</a></li>
-                            <li><hr class="dropdown-divider"/></li>
-                            <li><a class="dropdown-item" href="#">Terminer</a></li>
-                        </ul>
+                                <a class="nav-link" href="#" >Tache</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link enable" aria-disabled="true">Nouvelle Tache</a>
+                                <Link class="nav-link" to="/AjouteTache">Nouvelle Tache</Link>
                             </li>
                         </ul>
-                        <form class="d-flex" role="search">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                            <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
                     </div>
                 </div>
             </nav>
             <h1>bienvenue au page responsable</h1>
-            <input type='text' placeholder='quel est la prochaine tàche'/>
-            <button type='submit'>envoyer</button>
         </div>
     );
 };
