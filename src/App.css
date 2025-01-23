@@ -196,3 +196,9 @@ fieldset {
 .dashboard button:hover {
   background: #b52a35;
 }
+h1{
+  text-align: center;
+  margin-bottom: 20px;
+  color: #007bff;
+  font-size: 24px;
+}

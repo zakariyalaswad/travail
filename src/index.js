@@ -9,7 +9,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import DashEmployee from './pages/dashEmployee';
 import DashResponsable from './pages/dashResponsable';
 import AjouteTache from './pages/AjouteTache';
-
+import { SpeedInsights } from "@vercel/speed-insights/react";
+import Tache from './pages/Tache';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -20,6 +21,7 @@ root.render(
         <Route path="/dashemployee" element={<DashEmployee />} />
         <Route path="/dashresponsable" element={<DashResponsable />} />
         <Route path="/AjouteTache" element={<AjouteTache />} />
+        <Route path="/Tache" element={<Tache />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
