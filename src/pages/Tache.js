@@ -11,6 +11,7 @@ function Tache() {
     const [userRole, setUserRole] = useState(null);
     const [formdata, setFormData] = useState([]); // Pour stocker les tâches récupérées
     const tableRef = useRef(null); // Référence au tableau HTML
+    const [table, setTable] = useState(null);
 
     // Fonction pour récupérer les tâches depuis Firebase
     useEffect(() => {
@@ -61,33 +62,48 @@ function Tache() {
         }
     };
 
-    // Initialiser DataTables après avoir les données
+    // Cleanup function for DataTable
     useEffect(() => {
-        if (formdata.length > 0) {
-            // Créer le tableau interactif avec DataTables
-            const table = new DataTable(tableRef.current, {
+        return () => {
+            if (table) {
+                table.destroy();
+            }
+        };
+    }, [table]);
+
+    // Initialize DataTable
+    useEffect(() => {
+        if (formdata.length > 0 && !table && tableRef.current) {
+            const newTable = new DataTable(tableRef.current, {
+                destroy: true,
                 data: formdata.map((item) => [
-                    item.titre,        // Colonne 1 : Titre de la tâche
-                    item.description,  // Colonne 2 : Description
-                    item.datedebut,    // Colonne 3 : Date de début
-                    item.datefin,      // Colonne 4 : Date de fin
-                    item.employee,     // Colonne 5 : Employé assigné
-                    item.etat,         // Colonne 6 : État de la tâche
+                    item.titre,
+                    item.description,
+                    item.datedebut,
+                    item.datefin,
+                    item.employee,
+                    `<span class="status-${item.etat.toLowerCase().replace(' ', '-')}">${item.etat}</span>`
                 ]),
                 columns: [
                     { title: 'Titre' },
                     { title: 'Description' },
                     { title: 'Date Début' },
                     { title: 'Date Fin' },
-                    { title: 'Employé' },
-                    { title: 'État' },
+                    { title: 'Assigné à' },
+                    { title: 'État' }
                 ],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json'
+                },
+                pageLength: 10,
+                responsive: true,
+                dom: '<"top"lf>rt<"bottom"ip>',
+                createdRow: function(row, data, dataIndex) {
+                    row.classList.add('task-row');
+                }
             });
 
-            // Nettoyer l'instance DataTables avant de recréer
-            return () => {
-                table.destroy();
-            };
+            setTable(newTable);
         }
     }, [formdata]);
 
@@ -133,8 +149,27 @@ function Tache() {
                 </div>
             </nav>
 
-            {/* Tableau des tâches */}
-            <table ref={tableRef} className="display" style={{ width: '100%' }}></table>
+            <div className="task-container">
+                <h2 className="task-header">Gestion des Tâches</h2>
+                <div className="task-table-wrapper">
+                    <div className="table-responsive">
+                        <table ref={tableRef} className="task-table display">
+                            <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Description</th>
+                                    <th>Date Début</th>
+                                    <th>Date Fin</th>
+                                    <th>Assigné à</th>
+                                    <th>État</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

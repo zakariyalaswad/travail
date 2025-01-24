@@ -1,43 +1,47 @@
 /* Global styles */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   margin: 0;
   padding: 0;
-  background-color: #f8f9fa;
+  background-color: #f0f2f5;
 }
 
 .App {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 450px;
+  margin: 40px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.5s ease;
 }
 
 /* Auth buttons */
 .auth-buttons {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  background: #f0f2f5;
+  padding: 5px;
+  border-radius: 15px;
+  margin-bottom: 30px;
 }
 
 .toggle-btn {
   flex: 1;
-  padding: 10px 20px;
-  border: 1px solid #ddd;
+  padding: 12px;
+  border: none;
   background: none;
-  cursor: pointer;
-  border-radius: 4px;
-  font-weight: bold;
-  transition: background-color 0.3s, color 0.3s;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.3s ease;
 }
 
 .toggle-btn.active {
-  background: #007bff;
-  color: white;
-  border-color: #007bff;
+  background: white;
+  color: #1a73e8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .toggle-btn:hover:not(.active) {
@@ -46,75 +50,123 @@ body {
 
 /* Form group */
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
-  color: #495057;
-  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #444;
+  font-weight: 500;
 }
 
 input, textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  padding: 12px 15px;
+  border: 2px solid #e1e5ee;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
 }
 
 input:focus, textarea:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+  border-color: #1a73e8;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+  outline: none;
 }
 
 /* Submit button */
 button[type="submit"] {
   width: 100%;
-  padding: 12px;
-  background: #007bff;
-  color: white;
+  padding: 14px;
   border: none;
-  border-radius: 4px;
+  border-radius: 12px;
+  background: #1a73e8;
+  color: white;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  margin-top: 10px;
 }
 
 button[type="submit"]:hover:not(:disabled) {
-  background: #0056b3;
+  background: #1557b0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
 }
 
 button[type="submit"]:disabled {
   background: #ccc;
+  cursor: not-allowed;
 }
 
 /* Message styles */
 .message {
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 4px;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
 }
 
 .message.success {
-  background: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background: #e6f4ea;
+  color: #1e8e3e;
+  border: 1px solid #d4edda;
 }
 
 .message.error {
-  background: #f8d7da;
-  color: #721c24;
+  background: #fce8e8;
+  color: #d93025;
   border: 1px solid #f5c6cb;
+}
+
+.message.sent {
+  background: #0084ff;
+  color: white;
+  margin-left: auto;
+  border-bottom-right-radius: 5px;
+}
+
+.message.received {
+  background: #e9ecef;
+  color: black;
+  margin-right: auto;
+  border-bottom-left-radius: 5px;
+}
+
+.message small {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-top: 5px;
+  display: block;
 }
 
 /* Loading */
 .loading {
   text-align: center;
-  margin: 10px 0;
   color: #666;
+  padding: 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.loading::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #1a73e8;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
 /* Fieldset */
@@ -207,6 +259,9 @@ h1{
 .card {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     margin-bottom: 1rem;
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
 }
 
 .card-title {
@@ -227,3 +282,545 @@ h1{
 }
 
 /* Add more specific styles as needed */
+
+/* Chat box styles */
+.chat-box {
+    scroll-behavior: smooth;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Contact list styles */
+.list-group-item {
+    border: none;
+    border-radius: 10px !important;
+    margin-bottom: 5px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+}
+
+.list-group-item.active {
+    background-color: #e7f3ff;
+    color: #0084ff;
+    border: none;
+}
+
+/* Input styles */
+.input-group .form-control {
+    border-radius: 20px;
+    padding: 10px 20px;
+    border: 2px solid #eee;
+}
+
+.input-group .form-control:focus {
+    box-shadow: none;
+    border-color: #0084ff;
+}
+
+.input-group .btn {
+    border-radius: 20px;
+    padding: 10px 25px;
+    margin-left: 10px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card styles */
+.card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background: white;
+    border-bottom: 1px solid #eee;
+    border-radius: 15px 15px 0 0 !important;
+}
+
+/* Navbar styles */
+.navbar {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: white !important;
+}
+
+.nav-link {
+    border-radius: 8px;
+    padding: 8px 15px !important;
+    margin: 0 5px;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background: #f0f2f5;
+}
+
+.nav-link.active {
+    background: #e7f3ff;
+    color: #0084ff !important;
+}
+
+.btn-danger {
+    background: #dc3545;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+/* Loading spinner */
+.spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 0.2em;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Profile styles */
+.profile-header {
+    background: linear-gradient(135deg, #0084ff, #00f2fe);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+}
+
+/* DataTable customization */
+.dataTables_wrapper {
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    margin: 30px;
+}
+
+table.dataTable {
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+    margin: 15px 0 !important;
+    width: 100% !important;
+}
+
+table.dataTable thead th {
+    padding: 15px 10px;
+    font-weight: 600;
+    color: #2c3e50;
+    background: #f8f9fa;
+    border: none !important;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+table.dataTable tbody tr {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 10px;
+}
+
+table.dataTable tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+table.dataTable tbody td {
+    padding: 15px 10px;
+    border: none;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444;
+    font-size: 14px;
+}
+
+table.dataTable tbody td:first-child {
+    border-left: 1px solid #f0f0f0;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+table.dataTable tbody td:last-child {
+    border-right: 1px solid #f0f0f0;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* DataTable Search and Length Controls */
+.dataTables_filter input {
+    border-radius: 25px !important;
+    padding: 8px 20px !important;
+    border: 2px solid #eee !important;
+    width: 300px !important;
+    font-size: 14px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+    transition: all 0.3s ease !important;
+}
+
+.dataTables_filter input:focus {
+    border-color: #0084ff !important;
+    box-shadow: 0 2px 15px rgba(0,132,255,0.15) !important;
+    outline: none !important;
+}
+
+.dataTables_length select {
+    border-radius: 20px !important;
+    padding: 5px 15px !important;
+    border: 2px solid #eee !important;
+    background-color: white !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+}
+
+/* Pagination Buttons */
+.dataTables_paginate .paginate_button {
+    border-radius: 20px !important;
+    padding: 8px 15px !important;
+    border: none !important;
+    background: #f8f9fa !important;
+    color: #444 !important;
+    margin: 0 3px !important;
+    transition: all 0.3s ease !important;
+}
+
+.dataTables_paginate .paginate_button:hover {
+    background: #e7f3ff !important;
+    color: #0084ff !important;
+}
+
+.dataTables_paginate .paginate_button.current {
+    background: #0084ff !important;
+    color: white !important;
+}
+
+/* Status Colors */
+.status-pending {
+    color: #ffa600;
+    background-color: #fff5e6;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-completed {
+    color: #00c853;
+    background-color: #e8f5e9;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-in-progress {
+    color: #2196f3;
+    background-color: #e3f2fd;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Task Title Column */
+table.dataTable tbody td:first-child {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Date Columns */
+table.dataTable tbody td:nth-child(3),
+table.dataTable tbody td:nth-child(4) {
+    color: #666;
+    font-size: 13px;
+}
+
+/* Employee Column */
+table.dataTable tbody td:nth-child(5) {
+    font-weight: 500;
+    color: #0084ff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dataTables_wrapper {
+        padding: 15px;
+        margin: 15px;
+    }
+
+    .dataTables_filter input {
+        width: 100% !important;
+        margin-bottom: 15px;
+    }
+
+    table.dataTable tbody td {
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+/* Modern Task Table Styles */
+.task-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.task-header {
+    color: #1a1a1a;
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.task-table-wrapper {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    padding: 20px;
+}
+
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+/* DataTable Custom Styles */
+.dataTables_wrapper {
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.dataTables_filter {
+    margin-bottom: 20px;
+}
+
+.dataTables_filter input {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 8px 12px;
+    width: 250px;
+}
+
+.dataTables_length select {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* Table Header */
+.task-table thead th {
+    background: #f8f9fa;
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #eee;
+}
+
+/* Table Body */
+.task-table tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+/* Task Elements */
+.task-title {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.task-desc {
+    color: #666;
+    font-size: 14px;
+}
+
+.task-date {
+    color: #666;
+    font-size: 14px;
+}
+
+.task-employee {
+    color: #0084ff;
+    font-weight: 500;
+}
+
+.task-status {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-en.cour {
+    background: #e3f2fd;
+    color: #2196f3;
+}
+
+.status-terminé {
+    background: #e8f5e9;
+    color: #00c853;
+}
+
+.status-en.attente {
+    background: #fff3e0;
+    color: #ff9800;
+}
+
+/* Hover Effect */
+.task-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .task-container {
+        padding: 10px;
+    }
+    
+    .task-table-wrapper {
+        padding: 10px;
+    }
+    
+    .task-desc {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* Task Table Specific Styles */
+.task-table-wrapper {
+    margin: 20px;
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.task-table {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.status-en-cours {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-termine {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-en-attente {
+    background: #fff3e0;
+    color: #f57c00;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.task-row {
+    transition: all 0.2s ease;
+}
+
+.task-row:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+    .App {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .toggle-btn {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 10px 12px;
+    }
+}
