@@ -7,7 +7,7 @@ import './index.css';
 import App from './App';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import DashEmployee from './pages/dashEmployee';
-import DashResponsable from './pages/dashresponsable';
+import DashResponsable from './pages/dashResponsable';
 import AjouteTache from './pages/AjouteTache';
 import Tache from './pages/Tache';
 import Chat from './pages/chat';
@@ -20,7 +20,7 @@ root.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/dashemployee" element={<DashEmployee />} />
-        <Route path="/dashresponsable" element={<DashResponsable />} />
+        <Route path="/dashResponsable" element={<DashResponsable />} />
         <Route path="/AjouteTache" element={<AjouteTache />} />
         <Route path="/Tache" element={<Tache />} />
         <Route path="/chat" element={<Chat />} />
