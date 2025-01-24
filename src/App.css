@@ -202,3 +202,28 @@ h1{
   color: #007bff;
   font-size: 24px;
 }
+
+/* Profile page styles */
+.card {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    margin-bottom: 1rem;
+}
+
+.card-title {
+    color: #007bff;
+    margin-bottom: 1.5rem;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.table th {
+    background-color: #f8f9fa;
+}
+
+.search-box {
+    margin-bottom: 1rem;
+}
+
+/* Add more specific styles as needed */

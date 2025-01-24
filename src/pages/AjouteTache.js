@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import navigate from 'navigate';
 function AjouteTache(){
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
@@ -39,6 +40,10 @@ function AjouteTache(){
             [id]: value
         }));
     };
+
+    const signOut = () => {
+
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoadingAdd(true);
@@ -87,13 +92,25 @@ function AjouteTache(){
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <Link className="nav-link" to="/dashResponsable"><i className="bi bi-house"></i>Home</Link>
+                                <Link className="nav-link" to="/dashresponsable"><i className="bi bi-house"></i>Home</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="/Tache">Tache</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link active" aria-current="page" to="/AjouteTache">Nouvelle Tache</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/employee">Employee</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/Chat">Chat</Link>
+                            </li>
+                            <li>
+                                <Link className="nav-link btn btn-danger" to="/" onClick={() => {
+                                    signOut();
+                                    navigate('/', { replace: true });
+                                }}>Log Out</Link>
                             </li>
                         </ul>
                     </div>
@@ -121,6 +138,7 @@ function AjouteTache(){
                     <label>Employee</label>
                     <select id="employee" className="form-control" value={formdata.employee} onChange={handleChange} required>
                         <option value=''>Selectionner un employee</option>
+                        <hr/>
                         {employees.map(employee => (
                             <option key={employee.id} value={employee.id}>{employee.nom} {employee.prenom}</option>
                         ))} 

@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase'; // Assure-toi que ta configuration Firebase est bien importée
-import DataTable from 'datatables.net-dt'; // Import DataTables
+import { Link, useNavigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { collection, query, where, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
+import { db } from '../firebase';
+import DataTable from 'datatables.net-dt';
 
 function Tache() {
+    const navigate = useNavigate();
+    const auth = getAuth();
+    const [userRole, setUserRole] = useState(null);
     const [formdata, setFormData] = useState([]); // Pour stocker les tâches récupérées
     const tableRef = useRef(null); // Référence au tableau HTML
 
@@ -30,6 +34,32 @@ function Tache() {
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            if (auth.currentUser) {
+                try {
+                    const userDoc = await getDocs(query(collection(db, 'users'), where('uid', '==', auth.currentUser.uid)));
+                    if (!userDoc.empty) {
+                        setUserRole(userDoc.docs[0].data().role);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user role:', error);
+                }
+            }
+        };
+        
+        fetchUserRole();
+    }, [auth.currentUser]);
+
+    const handleLogout = async () => {
+        try {
+            await auth.signOut();
+            navigate('/', { replace: true });
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
+    };
 
     // Initialiser DataTables après avoir les données
     useEffect(() => {
@@ -73,13 +103,30 @@ function Tache() {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <Link className="nav-link" to="/dashResponsable"><i className="bi bi-house"></i> Home</Link>
+                                <Link className="nav-link" to={userRole === 'responsable' ? "/dashresponsable" : "/dashEmployee"}>
+                                    <i className="bi bi-house"></i>Home
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/Tache">Tâche</Link>
+                                <Link className="nav-link active" aria-current="page" to="/Tache">Tache</Link>
                             </li>
+                            {userRole === 'responsable' && (
+                                <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/AjouteTache">Nouvelle Tache</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/employee">Employee</Link>
+                                    </li>
+                                </>
+                            )}
                             <li className="nav-item">
-                                <Link className="nav-link" to="/AjouteTache">Nouvelle Tâche</Link>
+                                <Link className="nav-link" to="/Chat">Chat</Link>
+                            </li>
+                            <li>
+                                <Link className="nav-link btn btn-danger" to="/" onClick={handleLogout}>
+                                    Log Out
+                                </Link>
                             </li>
                         </ul>
                     </div>
