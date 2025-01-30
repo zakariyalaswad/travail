@@ -7,7 +7,7 @@ import './index.css';
 import App from './App';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import DashEmployee from './pages/dashEmployee';
-import DashResponsable from './pages/dashResponsable';
+import DashResponsable from './pages/dashresponsable';
 import AjouteTache from './pages/AjouteTache';
 import Tache from './pages/Tache';
 import Chat from './pages/chat';

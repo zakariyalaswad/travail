@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { collection, query, where, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { collection, query, where, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 import DataTable from 'datatables.net-dt';
 
@@ -12,6 +12,7 @@ function Tache() {
     const [formdata, setFormData] = useState([]); // Pour stocker les tâches récupérées
     const tableRef = useRef(null); // Référence au tableau HTML
     const [table, setTable] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     // Fonction pour récupérer les tâches depuis Firebase
     useEffect(() => {
@@ -62,6 +63,162 @@ function Tache() {
         }
     };
 
+    const handleConfirm = async (id) => {
+        const task = formdata.find(t => t.id === id);
+        if (!task) {
+            alert('Tâche non trouvée');
+            return;
+        }
+
+        if (task.etat !== 'Terminée') {
+            alert('Seules les tâches terminées peuvent être confirmées');
+            return;
+        }
+
+        const confirmation = window.confirm(`Êtes-vous sûr de vouloir confirmer la tâche "${task.titre}" ?`);
+        if (!confirmation) return;
+
+        setIsLoading(true);
+        try {
+            const taskRef = doc(db, 'taches', id);
+            const updateData = {
+                etat: 'Confirmée',
+                dateConfirmation: new Date().toISOString(),
+                confirmeePar: auth.currentUser.email,
+                dateModification: new Date().toISOString(),
+                historique: [{
+                    action: 'Confirmation',
+                    date: new Date().toISOString(),
+                    par: auth.currentUser.email,
+                    ancienetat: task.etat,
+                    nouveletat: 'Confirmée'
+                }]
+            };
+
+            await updateDoc(taskRef, updateData);
+            
+            // Mise à jour du state local
+            const updatedData = formdata.map(task => 
+                task.id === id ? { 
+                    ...task,
+                    ...updateData
+                } : task
+            );
+            setFormData(updatedData);
+            
+            // Rafraîchir la table
+            if (table) {
+                table.clear().rows.add(updatedData.map(item => [
+                    item.titre,
+                    item.description,
+                    item.datedebut,
+                    item.datefin,
+                    item.employee,
+                    `<span class="status-${item.etat.toLowerCase().replace(' ', '-')}">${item.etat}</span>`,
+                    userRole === 'responsable' && item.etat === 'Terminée' ? 
+                    `<div class="btn-group" role="group">
+                        <button onclick="handleConfirm('${item.id}')" class="btn btn-success btn-sm">
+                            Confirmer
+                        </button>
+                        <button onclick="handleRefuser('${item.id}')" class="btn btn-danger btn-sm">
+                            Refuser
+                        </button>
+                    </div>` : 
+                    item.etat === 'Confirmée' ? 
+                    '<span class="badge bg-success">Confirmée</span>' :
+                    item.etat === 'Refusée' ? 
+                    '<span class="badge bg-danger">Refusée</span>' : ''
+                ])).draw();
+            }
+
+            alert(`La tâche "${task.titre}" a été confirmée avec succès !`);
+        } catch (error) {
+            console.error('Erreur lors de la confirmation:', error);
+            alert(`Erreur lors de la confirmation: ${error.message}`);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleRefuser = async (id) => {
+        const task = formdata.find(t => t.id === id);
+        if (!task) {
+            alert('Tâche non trouvée');
+            return;
+        }
+
+        if (task.etat !== 'Terminée') {
+            alert('Seules les tâches terminées peuvent être refusées');
+            return;
+        }
+
+        const motifRefus = window.prompt('Veuillez entrer le motif du refus (minimum 10 caractères) :');
+        if (!motifRefus || motifRefus.length < 10) {
+            alert('Veuillez fournir un motif de refus détaillé (minimum 10 caractères)');
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const taskRef = doc(db, 'taches', id);
+            const updateData = {
+                etat: 'Refusée',
+                motifRefus,
+                dateRefus: new Date().toISOString(),
+                refuseePar: auth.currentUser.email,
+                dateModification: new Date().toISOString(),
+                historique: [{
+                    action: 'Refus',
+                    date: new Date().toISOString(),
+                    par: auth.currentUser.email,
+                    motif: motifRefus,
+                    ancienetat: task.etat,
+                    nouveletat: 'Refusée'
+                }]
+            };
+
+            await updateDoc(taskRef, updateData);
+            
+            // Mise à jour du state local et rafraîchissement de la table
+            const updatedData = formdata.map(task => 
+                task.id === id ? { ...task, ...updateData } : task
+            );
+            setFormData(updatedData);
+            
+            if (table) {
+                // Rafraîchir la table avec les nouvelles données
+                table.clear().rows.add(updatedData.map(item => [
+                    item.titre,
+                    item.description,
+                    item.datedebut,
+                    item.datefin,
+                    item.employee,
+                    `<span class="status-${item.etat.toLowerCase().replace(' ', '-')}">${item.etat}</span>`,
+                    userRole === 'responsable' && item.etat === 'Terminée' ? 
+                    `<div class="btn-group" role="group">
+                        <button onclick="handleConfirm('${item.id}')" class="btn btn-success btn-sm">
+                            Confirmer
+                        </button>
+                        <button onclick="handleRefuser('${item.id}')" class="btn btn-danger btn-sm">
+                            Refuser
+                        </button>
+                    </div>` : 
+                    item.etat === 'Confirmée' ? 
+                    '<span class="badge bg-success">Confirmée</span>' :
+                    item.etat === 'Refusée' ? 
+                    '<span class="badge bg-danger">Refusée</span>' : ''
+                ])).draw();
+            }
+
+            alert(`La tâche "${task.titre}" a été refusée avec succès !`);
+        } catch (error) {
+            console.error('Erreur lors du refus:', error);
+            alert(`Erreur lors du refus: ${error.message}`);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     // Cleanup function for DataTable
     useEffect(() => {
         return () => {
@@ -74,6 +231,34 @@ function Tache() {
     // Initialize DataTable
     useEffect(() => {
         if (formdata.length > 0 && !table && tableRef.current) {
+            // Ajouter les gestionnaires d'événements au window
+            window.handleConfirm = async (id) => {
+                try {
+                    const taskRef = doc(db, 'taches', id);
+                    await updateDoc(taskRef, { etat: 'Confirmée' });
+                    // Rafraîchir les données après la confirmation
+                    const updatedData = formdata.map(task => 
+                        task.id === id ? { ...task, etat: 'Confirmée' } : task
+                    );
+                    setFormData(updatedData);
+                } catch (error) {
+                    console.error('Erreur lors de la confirmation:', error);
+                }
+            };
+
+            window.handleRefuser = async (id) => {
+                try {
+                    const taskRef = doc(db, 'taches', id);
+                    await updateDoc(taskRef, { etat: 'Refusée' });
+                    const updatedData = formdata.map(task => 
+                        task.id === id ? { ...task, etat: 'Refusée' } : task
+                    );
+                    setFormData(updatedData);
+                } catch (error) {
+                    console.error('Erreur lors du refus:', error);
+                }
+            };
+
             const newTable = new DataTable(tableRef.current, {
                 destroy: true,
                 data: formdata.map((item) => [
@@ -82,7 +267,20 @@ function Tache() {
                     item.datedebut,
                     item.datefin,
                     item.employee,
-                    `<span class="status-${item.etat.toLowerCase().replace(' ', '-')}">${item.etat}</span>`
+                    `<span class="status-${item.etat.toLowerCase().replace(' ', '-')}">${item.etat}</span>`,
+                    userRole === 'responsable' && item.etat === 'Terminée' ? 
+                    `<div class="btn-group" role="group">
+                        <button onclick="handleConfirm('${item.id}')" class="btn btn-success btn-sm">
+                            Confirmer
+                        </button>
+                        <button onclick="handleRefuser('${item.id}')" class="btn btn-danger btn-sm">
+                            Refuser
+                        </button>
+                    </div>` : 
+                    item.etat === 'Confirmée' ? 
+                    '<span class="badge bg-success">Confirmée</span>' :
+                    item.etat === 'Refusée' ? 
+                    '<span class="badge bg-danger">Refusée</span>' : ''
                 ]),
                 columns: [
                     { title: 'Titre' },
@@ -90,7 +288,8 @@ function Tache() {
                     { title: 'Date Début' },
                     { title: 'Date Fin' },
                     { title: 'Assigné à' },
-                    { title: 'État' }
+                    { title: 'État' },
+                    { title: 'Actions', orderable: false, searchable: false }
                 ],
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json'
@@ -104,8 +303,17 @@ function Tache() {
             });
 
             setTable(newTable);
+
+            // Cleanup function
+            return () => {
+                delete window.handleConfirm;
+                delete window.handleRefuser;
+                if (table) {
+                    table.destroy();
+                }
+            };
         }
-    }, [formdata]);
+    }, [formdata, userRole]);
 
     return (
         <div>
@@ -162,6 +370,7 @@ function Tache() {
                                     <th>Date Fin</th>
                                     <th>Assigné à</th>
                                     <th>État</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
