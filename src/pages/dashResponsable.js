@@ -179,7 +179,7 @@ function DashResponsable() {
             <div className="sidebar">
                 <div className="sidebar-header">
                     <i className="bi bi-person-circle profile-icon"></i>
-                    <span className="admin-name">{auth.currentUser.nom||'Admin'}</span>
+                    <span className="admin-name">Admin</span>
                 </div>
                 <nav className="sidebar-nav">
                     <Link to="/dashresponsable" className="sidebar-link active">
