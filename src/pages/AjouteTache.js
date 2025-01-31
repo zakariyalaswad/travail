@@ -117,85 +117,97 @@ function AjouteTache() {
     };
 
     return (
-        <div>
-            <nav className="navbar navbar-expand-lg bg-body-tertiary">
-                <div className="container-fluid">
-                    <Link className="nav-link" to="/profil"><i className="bi bi-person-circle" title='Profil'></i></Link>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/dashresponsable"><i className="bi bi-house"></i>Home</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/Tache">Tache</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/AjouteTache">Nouvelle Tache</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/employee">Employee</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/Chat">Chat</Link>
-                            </li>
-                            <li>
-                                <Link className="nav-link btn btn-danger" to="/" onClick={() => {
-                                    signOut();
-                                    navigate('/', { replace: true });
-                                }}>Log Out</Link>
-                            </li>
-                        </ul>
-                    </div>
+        <div className="dashboard-layout">
+            <div className="sidebar">
+                <div className="sidebar-header">
+                    <i className="bi bi-person-circle profile-icon"></i>
+                    <span className="admin-name">Admin</span>
                 </div>
-            </nav>
-            <form onSubmit={handleSubmit}>
-                <h1>Nouvelle Tache</h1>
-                <div className="container">
-                    {/* Ajouter l'affichage des messages ici */}
-                    {message.text && (
-                        <div className={`message ${message.type}`}>
-                            {message.text}
-                        </div>
-                    )}
-                    
-                    {loadingAdd && (
-                        <div className="loading">
-                            Ajout de la tâche en cours...
-                        </div>
-                    )}
+                <nav className="sidebar-nav">
+                    <Link to="/dashresponsable" className="sidebar-link">
+                        <i className="bi bi-house"></i>
+                        <span>Dashboard</span>
+                    </Link>
+                    <Link to="/AjouteTache" className="sidebar-link active">
+                        <i className="bi bi-plus-circle"></i>
+                        <span>Nouvelle Tâche</span>
+                    </Link>
+                    <Link to="/employee" className="sidebar-link">
+                        <i className="bi bi-people"></i>
+                        <span>Employés</span>
+                    </Link>
+                    <Link to="/Chat" className="sidebar-link">
+                        <i className="bi bi-chat"></i>
+                        <span>Chat</span>
+                    </Link>
+                    <Link to="/profil" className="sidebar-link">
+                        <i className="bi bi-person"></i>
+                        <span>Profil</span>
+                    </Link>
+                    <Link 
+                        to="/" 
+                        className="sidebar-link logout"
+                        onClick={() => {
+                            signOut();
+                            navigate('/', { replace: true });
+                        }}
+                    >
+                        <i className="bi bi-box-arrow-right"></i>
+                        <span>Déconnexion</span>
+                    </Link>
+                </nav>
+            </div>
+            <div className="main-content">
+                <form onSubmit={handleSubmit}>
+                    <h1>Nouvelle Tache</h1>
+                    <div className="container">
+                        {/* Ajouter l'affichage des messages ici */}
+                        {message.text && (
+                            <div className={`message ${message.type}`}>
+                                {message.text}
+                            </div>
+                        )}
+                        
+                        {loadingAdd && (
+                            <div className="loading">
+                                <div class="d-flex justify-content-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
-                    <label>Titre</label>
-                    <input type='text' id="titre" value={formdata.titre} onChange={handleChange} required/>
-                    <br/>
-                    <br/>
-                    <label>Description</label>
-                    <input type='text' id="description" value={formdata.description} onChange={handleChange} required/>
-                    <br/>
-                    <br/>
-                    <label>Date de debut</label>
-                    <input type='date' id="datedebut" value={formdata.datedebut} onChange={handleChange} required/>
-                    <br/>
-                    <br/>
-                    <label>Date de fin</label>
-                    <input type='date' id="datefin" value={formdata.datefin} onChange={handleChange} required/>
-                    <br/>
-                    <br/>
-                    <label>Employee</label>
-                    <select id="employee" className="form-control" value={formdata.employeeUid} onChange={handleChange} required>
-                        <option value=''>Selectionner un employee</option>
-                        <hr/>
-                        {employees.map(employee => (
-                            <option key={employee.uid} value={employee.uid}>{employee.nom} {employee.prenom}</option>
-                        ))}
-                    </select>
-                    <br/>
-                    <br/>
-                    <button type='submit'>Ajouter</button>
-                </div>
-            </form>
+                        <label>Titre</label>
+                        <input type='text' id="titre" value={formdata.titre} onChange={handleChange} required/>
+                        <br/>
+                        <br/>
+                        <label>Description</label>
+                        <input type='text' id="description" value={formdata.description} onChange={handleChange} required/>
+                        <br/>
+                        <br/>
+                        <label>Date de debut</label>
+                        <input type='date' id="datedebut" value={formdata.datedebut} onChange={handleChange} required/>
+                        <br/>
+                        <br/>
+                        <label>Date de fin</label>
+                        <input type='date' id="datefin" value={formdata.datefin} onChange={handleChange} required/>
+                        <br/>
+                        <br/>
+                        <label>Employee</label>
+                        <select id="employee" className="form-control" value={formdata.employeeUid} onChange={handleChange} required>
+                            <option value=''>Selectionner un employee</option>
+                            <hr/>
+                            {employees.map(employee => (
+                                <option key={employee.uid} value={employee.uid}>{employee.nom} {employee.prenom}</option>
+                            ))}
+                        </select>
+                        <br/>
+                        <br/>
+                        <button type='submit'>Ajouter</button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }

@@ -156,7 +156,13 @@ function Chat() {
     ), [messages, authUser]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div>
+            <div class="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>;
     }
 
     if (!authUser) {
@@ -164,80 +170,94 @@ function Chat() {
     }
 
     return (
-        <div>
-            <nav className="navbar navbar-expand-lg bg-body-tertiary">
-                <div className="container-fluid">
-                    <Link className="nav-link" to="/profil"><i className="bi bi-person-circle" title='Profil'></i></Link>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <Link className="nav-link" to={userRole === 'responsable' ? "/dashresponsable" : "/dashEmployee"}>
-                                    <i className="bi bi-house"></i>Home
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/Tache">Tache</Link>
-                            </li>
-                            {userRole === 'responsable' && (
-                                <>
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to="/AjouteTache">Nouvelle Tache</Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to="/employee">Employee</Link>
-                                    </li>
-                                </>
-                            )}
-                            <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/Chat">Chat</Link>
-                            </li>
-                            <li>
-                                <Link className="nav-link btn btn-danger" to="/" onClick={handleLogout}>Log Out</Link>
-                            </li>
-                        </ul>
-                    </div>
+        <div className="dashboard-layout">
+            <div className="sidebar">
+                <div className="sidebar-header">
+                    <i className="bi bi-person-circle profile-icon"></i>
+                    <span className="admin-name">Admin</span>
                 </div>
-            </nav>
-            <div className="container mt-4">
-                <div className="row">
-                    <div className="col-md-4">
-                        <h5>messanger</h5>
-                        {loadingEmployees ? <p>Loading...</p> : <ul className="list-group">{employeeList}</ul>}
-                    </div>
-                    <div className="col-md-8">
-                        {selectedEmployee && (
-                            <div>
-                                <h5>Chat with {selectedEmployee.nom}</h5>
-                                <div className="chat-box" style={{
-                                    height: '400px',
-                                    overflowY: 'auto',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    padding: '20px',
-                                    backgroundColor: '#f8f9fa',
-                                    borderRadius: '10px',
-                                    marginBottom: '20px'
-                                }}>
-                                    {loadingMessages ? <p>Loading...</p> : messageList}
+                <nav className="sidebar-nav">
+                    <Link to={userRole === 'responsable' ? "/dashresponsable" : "/dashEmployee"} className="sidebar-link">
+                        <i className="bi bi-house"></i>
+                        <span>Dashboard</span>
+                    </Link>
+                    {userRole === 'responsable' && (
+                        <>
+                            <Link to="/AjouteTache" className="sidebar-link">
+                                <i className="bi bi-plus-circle"></i>
+                                <span>Nouvelle Tâche</span>
+                            </Link>
+                            <Link to="/employee" className="sidebar-link">
+                                <i className="bi bi-people"></i>
+                                <span>Employés</span>
+                            </Link>
+                        </>
+                    )}
+                    <Link to="/Chat" className="sidebar-link active">
+                        <i className="bi bi-chat"></i>
+                        <span>Chat</span>
+                    </Link>
+                    <Link to="/profil" className="sidebar-link">
+                        <i className="bi bi-person"></i>
+                        <span>Profil</span>
+                    </Link>
+                    <Link 
+                        to="/" 
+                        className="sidebar-link logout"
+                        onClick={handleLogout}
+                    >
+                        <i className="bi bi-box-arrow-right"></i>
+                        <span>Déconnexion</span>
+                    </Link>
+                </nav>
+            </div>
+            <div className="main-content">
+                <div className="container mt-4">
+                    <div className="row">
+                        <div className="col-md-4">
+                            <h5>messanger</h5>
+                            {loadingEmployees ? <div class="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
+                                                    <div class="spinner-border" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                    </div> : <ul className="list-group">{employeeList}</ul>}
+                        </div>
+                        <div className="col-md-8">
+                            {selectedEmployee && (
+                                <div>
+                                    <h5>Chat with {selectedEmployee.nom}</h5>
+                                    <div className="chat-box" style={{
+                                        height: '400px',
+                                        overflowY: 'auto',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        padding: '20px',
+                                        backgroundColor: '#f8f9fa',
+                                        borderRadius: '10px',
+                                        marginBottom: '20px'
+                                    }}>
+                                        {loadingMessages ? <div class="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
+                                                                <div class="spinner-border" role="status">
+                                                                    <span class="visually-hidden">Loading...</span>
+                                                                </div>
+                                                                </div> : messageList}
+                                    </div>
+                                    <div className="input-group mt-3">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Type a message"
+                                            value={newMessage}
+                                            onChange={(e) => setNewMessage(e.target.value)}
+                                            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                                        />
+                                        <button className="btn btn-primary" onClick={handleSendMessage}>
+                                            Send
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="input-group mt-3">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Type a message"
-                                        value={newMessage}
-                                        onChange={(e) => setNewMessage(e.target.value)}
-                                        onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                                    />
-                                    <button className="btn btn-primary" onClick={handleSendMessage}>
-                                        Send
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

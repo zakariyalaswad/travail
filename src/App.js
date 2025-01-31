@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState } from 'react';
-import { collection, getDocs, query, where, setDoc, doc } from "firebase/firestore";
+import { collection, getDocs, query, where, setDoc, doc, Timestamp } from "firebase/firestore";
 import { db } from './firebase';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
@@ -85,6 +85,11 @@ function App() {
       delete user.password;
       user.role = "employee";
       user.uid = uid;
+      const date = new Date();
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      user.dateCreated = `${day}-${month}-${year}`;
       await setDoc(doc(db, "users", uid), user);
       setMessage({ text: 'Compte créé avec succès!', type: 'success' });
 
@@ -96,6 +101,7 @@ function App() {
         tel: '',
         adresse: ''
       });
+      console.log("User created with ID: ", uid);
     } catch (error) {
       setMessage({ text: "Erreur lors de l'inscription", type: 'error' });
     } finally {
