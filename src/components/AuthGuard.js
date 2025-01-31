@@ -9,16 +9,9 @@ const AuthGuard = ({ children, allowedRoles = ['employee', 'responsable'] }) => 
     const [authenticated, setAuthenticated] = useState(false);
     const [userRole, setUserRole] = useState(null);
     const auth = getAuth();
-    
-    useEffect(() => {
-        // Check if there's a current user immediately
-        if (!auth.currentUser) {
-            setAuthenticated(false);
-            setLoading(false);
-            return;
-        }
 
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    useEffect(() => {
+        const checkAuth = async (user) => {
             if (!user) {
                 setAuthenticated(false);
                 setUserRole(null);
@@ -45,8 +38,16 @@ const AuthGuard = ({ children, allowedRoles = ['employee', 'responsable'] }) => 
             } finally {
                 setLoading(false);
             }
-        });
+        };
 
+        // Check initial auth state
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+            checkAuth(currentUser);
+        }
+
+        // Listen for auth state changes
+        const unsubscribe = onAuthStateChanged(auth, checkAuth);
         return () => unsubscribe();
     }, [auth]);
 
