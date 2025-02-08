@@ -738,7 +738,7 @@ table.dataTable tbody td:nth-child(5) {
     color: #00c853;
 }
 
-.status-A-faire {
+.status-a-faire {
     background: #fff3e0;
     color: #ff9800;
 }
@@ -780,27 +780,9 @@ table.dataTable tbody td:nth-child(5) {
     margin: 0 !important;
 }
 
-.status-en-cours {
+.status-en-cour {
     background: #e3f2fd;
     color: #1976d2;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.status-termine {
-    background: #e8f5e9;
-    color: #2e7d32;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.status-en-attente {
-    background: #fff3e0;
-    color: #f57c00;
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 12px;
